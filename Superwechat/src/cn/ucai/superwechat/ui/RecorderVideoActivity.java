@@ -44,7 +44,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.hyphenate.superwechat.R;
+import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.video.util.Utils;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.EMLog;

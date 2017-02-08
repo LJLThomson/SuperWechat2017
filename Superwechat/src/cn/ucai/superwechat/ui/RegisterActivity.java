@@ -105,7 +105,7 @@ public class RegisterActivity extends BaseActivity {
                 if (s != null) {
 //                    将结果String转化为Result
                     Result result = ResultUtils.getResultFromJson(s, User.class);
-                    if (result != null) {
+                    if (result.isRetMsg()) {
 //                        说明注册成功
                         CommonUtils.showLongToast(R.string.Registered_successfully);
 //                        跳到环信注册模块
@@ -149,6 +149,7 @@ public class RegisterActivity extends BaseActivity {
                                 if (!RegisterActivity.this.isFinishing())
                                     pd.dismiss();
                                 // save current user
+//                                设置用户名
                                 SuperWechatHelper.getInstance().setCurrentUserName(username);
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
                                 MFGT.gotoLoginActivity(RegisterActivity.this);

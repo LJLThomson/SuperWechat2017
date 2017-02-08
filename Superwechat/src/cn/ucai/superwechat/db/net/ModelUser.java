@@ -32,4 +32,15 @@ public class ModelUser implements IModelUser {
                 .targetClass(String.class)
                 .execute(listener);
     }
+
+    @Override
+    public void LoginEnter(Context context, String userName, String password, OkHttpUtils.OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_LOGIN)
+                .addParam(I.User.USER_NAME,userName)
+                .addParam(I.User.PASSWORD,MD5.getMessageDigest(password))
+                .post()
+                .targetClass(String.class)
+                .execute(listener);
+    }
 }

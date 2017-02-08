@@ -10,5 +10,7 @@ import cn.ucai.superwechat.utils.OkHttpUtils;
 
 public interface IModelUser {
     void RegisterEnter(Context context, String userName, String NickName, String password, OnCompleteListener<String> OnCompleteListener);
+
     void UnRegisterEnter(Context context, String userName, OkHttpUtils.OnCompleteListener<String> onCompleteListener);
+    void LoginEnter(Context context, String userName, String password, OkHttpUtils.OnCompleteListener<String> listener);
 }

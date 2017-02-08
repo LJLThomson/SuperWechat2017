@@ -13,13 +13,14 @@
  */
 package cn.ucai.superwechat.db;
 
+import android.content.Context;
+
+import com.hyphenate.easeui.domain.EaseUser;
+
 import java.util.List;
 import java.util.Map;
 
-import android.content.Context;
-
 import cn.ucai.superwechat.domain.RobotUser;
-import com.hyphenate.easeui.domain.EaseUser;
 
 public class UserDao {
 	public static final String TABLE_NAME = "uers";
@@ -46,7 +47,7 @@ public class UserDao {
 	 * @param contactList
 	 */
 	public void saveContactList(List<EaseUser> contactList) {
-	    DemoDBManager.getInstance().saveContactList(contactList);
+	    SuperWechatDBManager.getInstance().saveContactList(contactList);
 	}
 
 	/**
@@ -56,7 +57,7 @@ public class UserDao {
 	 */
 	public Map<String, EaseUser> getContactList() {
 		
-	    return DemoDBManager.getInstance().getContactList();
+	    return SuperWechatDBManager.getInstance().getContactList();
 	}
 	
 	/**
@@ -64,7 +65,7 @@ public class UserDao {
 	 * @param username
 	 */
 	public void deleteContact(String username){
-	    DemoDBManager.getInstance().deleteContact(username);
+	    SuperWechatDBManager.getInstance().deleteContact(username);
 	}
 	
 	/**
@@ -72,30 +73,30 @@ public class UserDao {
 	 * @param user
 	 */
 	public void saveContact(EaseUser user){
-	    DemoDBManager.getInstance().saveContact(user);
+	    SuperWechatDBManager.getInstance().saveContact(user);
 	}
 	
 	public void setDisabledGroups(List<String> groups){
-	    DemoDBManager.getInstance().setDisabledGroups(groups);
+	    SuperWechatDBManager.getInstance().setDisabledGroups(groups);
     }
     
     public List<String>  getDisabledGroups(){       
-        return DemoDBManager.getInstance().getDisabledGroups();
+        return SuperWechatDBManager.getInstance().getDisabledGroups();
     }
     
     public void setDisabledIds(List<String> ids){
-        DemoDBManager.getInstance().setDisabledIds(ids);
+        SuperWechatDBManager.getInstance().setDisabledIds(ids);
     }
     
     public List<String> getDisabledIds(){
-        return DemoDBManager.getInstance().getDisabledIds();
+        return SuperWechatDBManager.getInstance().getDisabledIds();
     }
     
     public Map<String, RobotUser> getRobotUser(){
-    	return DemoDBManager.getInstance().getRobotList();
+    	return SuperWechatDBManager.getInstance().getRobotList();
     }
     
     public void saveRobotUser(List<RobotUser> robotList){
-    	DemoDBManager.getInstance().saveRobotList(robotList);
+    	SuperWechatDBManager.getInstance().saveRobotList(robotList);
     }
 }

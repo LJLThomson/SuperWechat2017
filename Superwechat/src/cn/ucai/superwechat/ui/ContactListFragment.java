@@ -17,7 +17,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.hyphenate.chat.EMClient;
-import cn.ucai.superwechat.DemoHelper;
+import cn.ucai.superwechat.SuperWechatHelper;
 
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.db.InviteMessgeDao;
@@ -77,7 +77,7 @@ public class ContactListFragment extends EaseContactListFragment {
     
     @Override
     public void refresh() {
-        Map<String, EaseUser> m = DemoHelper.getInstance().getContactList();
+        Map<String, EaseUser> m = SuperWechatHelper.getInstance().getContactList();
         if (m instanceof Hashtable<?, ?>) {
             //noinspection unchecked
             m = (Map<String, EaseUser>) ((Hashtable<String, EaseUser>)m).clone();
@@ -108,7 +108,7 @@ public class ContactListFragment extends EaseContactListFragment {
             }
         });
         //设置联系人数据
-        Map<String, EaseUser> m = DemoHelper.getInstance().getContactList();
+        Map<String, EaseUser> m = SuperWechatHelper.getInstance().getContactList();
         if (m instanceof Hashtable<?, ?>) {
             m = (Map<String, EaseUser>) ((Hashtable<String, EaseUser>)m).clone();
         }
@@ -139,17 +139,17 @@ public class ContactListFragment extends EaseContactListFragment {
         
         
         contactSyncListener = new ContactSyncListener();
-        DemoHelper.getInstance().addSyncContactListener(contactSyncListener);
+        SuperWechatHelper.getInstance().addSyncContactListener(contactSyncListener);
         
         blackListSyncListener = new BlackListSyncListener();
-        DemoHelper.getInstance().addSyncBlackListListener(blackListSyncListener);
+        SuperWechatHelper.getInstance().addSyncBlackListListener(blackListSyncListener);
         
         contactInfoSyncListener = new ContactInfoSyncListener();
-        DemoHelper.getInstance().getUserProfileManager().addSyncContactInfoListener(contactInfoSyncListener);
+        SuperWechatHelper.getInstance().getUserProfileManager().addSyncContactInfoListener(contactInfoSyncListener);
         
-        if (DemoHelper.getInstance().isContactsSyncedWithServer()) {
+        if (SuperWechatHelper.getInstance().isContactsSyncedWithServer()) {
             loadingView.setVisibility(View.GONE);
-        } else if (DemoHelper.getInstance().isSyncingContactsWithServer()) {
+        } else if (SuperWechatHelper.getInstance().isSyncingContactsWithServer()) {
             loadingView.setVisibility(View.VISIBLE);
         }
     }
@@ -158,16 +158,16 @@ public class ContactListFragment extends EaseContactListFragment {
     public void onDestroy() {
         super.onDestroy();
         if (contactSyncListener != null) {
-            DemoHelper.getInstance().removeSyncContactListener(contactSyncListener);
+            SuperWechatHelper.getInstance().removeSyncContactListener(contactSyncListener);
             contactSyncListener = null;
         }
         
         if(blackListSyncListener != null){
-            DemoHelper.getInstance().removeSyncBlackListListener(blackListSyncListener);
+            SuperWechatHelper.getInstance().removeSyncBlackListListener(blackListSyncListener);
         }
         
         if(contactInfoSyncListener != null){
-            DemoHelper.getInstance().getUserProfileManager().removeSyncContactInfoListener(contactInfoSyncListener);
+            SuperWechatHelper.getInstance().getUserProfileManager().removeSyncContactInfoListener(contactInfoSyncListener);
         }
     }
     
@@ -250,7 +250,7 @@ public class ContactListFragment extends EaseContactListFragment {
 					// remove user from memory and database
 					UserDao dao = new UserDao(getActivity());
 					dao.deleteContact(tobeDeleteUser.getUsername());
-					DemoHelper.getInstance().getContactList().remove(tobeDeleteUser.getUsername());
+					SuperWechatHelper.getInstance().getContactList().remove(tobeDeleteUser.getUsername());
 					getActivity().runOnUiThread(new Runnable() {
 						public void run() {
 							pd.dismiss();
@@ -274,7 +274,7 @@ public class ContactListFragment extends EaseContactListFragment {
 
 	}
 	
-	class ContactSyncListener implements DemoHelper.DataSyncListener {
+	class ContactSyncListener implements SuperWechatHelper.DataSyncListener {
         @Override
         public void onSyncComplete(final boolean success) {
             EMLog.d(TAG, "on contact list sync success:" + success);
@@ -300,7 +300,7 @@ public class ContactListFragment extends EaseContactListFragment {
         }
     }
     
-    class BlackListSyncListener implements DemoHelper.DataSyncListener {
+    class BlackListSyncListener implements SuperWechatHelper.DataSyncListener {
 
         @Override
         public void onSyncComplete(boolean success) {
@@ -315,7 +315,7 @@ public class ContactListFragment extends EaseContactListFragment {
         
     }
 
-    class ContactInfoSyncListener implements DemoHelper.DataSyncListener {
+    class ContactInfoSyncListener implements SuperWechatHelper.DataSyncListener {
 
         @Override
         public void onSyncComplete(final boolean success) {

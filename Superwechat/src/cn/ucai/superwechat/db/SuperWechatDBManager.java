@@ -5,10 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
-import cn.ucai.superwechat.Constant;
-import cn.ucai.superwechat.DemoApplication;
-import cn.ucai.superwechat.domain.InviteMessage;
-import cn.ucai.superwechat.domain.RobotUser;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.HanziToPinyin;
@@ -19,17 +15,22 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public class DemoDBManager {
-    static private DemoDBManager dbMgr = new DemoDBManager();
+import cn.ucai.superwechat.Constant;
+import cn.ucai.superwechat.SuperWechatApplication;
+import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.domain.RobotUser;
+
+public class SuperWechatDBManager {
+    static private SuperWechatDBManager dbMgr = new SuperWechatDBManager();
     private DbOpenHelper dbHelper;
     
-    private DemoDBManager(){
-        dbHelper = DbOpenHelper.getInstance(DemoApplication.getInstance().getApplicationContext());
+    private SuperWechatDBManager(){
+        dbHelper = DbOpenHelper.getInstance(SuperWechatApplication.getInstance().getApplicationContext());
     }
     
-    public static synchronized DemoDBManager getInstance(){
+    public static synchronized SuperWechatDBManager getInstance(){
         if(dbMgr == null){
-            dbMgr = new DemoDBManager();
+            dbMgr = new SuperWechatDBManager();
         }
         return dbMgr;
     }

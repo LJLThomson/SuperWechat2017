@@ -47,9 +47,9 @@
     <uses-permission android:name="com.hyphenate.chatuidemo.permission.MIPUSH_RECEIVE" />
 
     <application
-        android:name=".DemoApplication"
+        android:name=".SuperWechatApplication"
         android:allowBackup="true"
-        android:icon="@drawable/em_logo_uidemo"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name">
         <activity
             android:name=".ui.MainActivity"

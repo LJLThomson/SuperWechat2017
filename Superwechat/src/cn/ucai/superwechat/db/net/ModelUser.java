@@ -22,4 +22,14 @@ public class ModelUser implements IModelUser {
                 .targetClass(String.class)
                 .execute(listener);
     }
+
+    @Override
+    public void UnRegisterEnter(Context context, String userName, OkHttpUtils.OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_UNREGISTER)
+                .addParam(I.User.USER_NAME,userName)
+                .post()
+                .targetClass(String.class)
+                .execute(listener);
+    }
 }

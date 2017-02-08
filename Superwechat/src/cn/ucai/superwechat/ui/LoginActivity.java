@@ -28,11 +28,12 @@ import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.utils.EaseCommonUtils;
+
+import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWechatApplication;
 import cn.ucai.superwechat.SuperWechatHelper;
-import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.db.SuperWechatDBManager;
-import com.hyphenate.easeui.utils.EaseCommonUtils;
 
 /**
  * Login screen
@@ -67,6 +68,7 @@ public class LoginActivity extends BaseActivity {
 		usernameEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
+//				当用户名变化时，密码设置为null
 				passwordEditText.setText(null);
 			}
 

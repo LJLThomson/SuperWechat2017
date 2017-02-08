@@ -63,8 +63,8 @@ public class SplashActivity extends BaseActivity {
 						// avoid main screen overlap Calling Activity
 					} else {
 						//enter main screen
+//						直接进入MainActivity
 						startActivity(new Intent(SplashActivity.this, MainActivity.class));
-//						MFGT.startActivity(SplashActivity.this, LoginAndRegisterActivity.class);
 					}
 					finish();
 				}else {

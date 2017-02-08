@@ -7,9 +7,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
-import cn.ucai.superwechat.DemoHelper;
-import cn.ucai.superwechat.R;
 import com.hyphenate.util.EasyUtils;
+
+import cn.ucai.superwechat.SuperWechatHelper;
+import cn.ucai.superwechat.R;
 
 /**
  * 开屏页
@@ -28,6 +29,7 @@ public class SplashActivity extends BaseActivity {
 		TextView versionText = (TextView) findViewById(R.id.tv_version);
 
 		versionText.setText(getVersion());
+//		设置动画———透明动画
 		AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
 		animation.setDuration(1500);
 		rootLayout.startAnimation(animation);
@@ -36,10 +38,10 @@ public class SplashActivity extends BaseActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-
+//		开启的子线程，但不能修改view，不然报错，也就是不能修改更新UI线程
 		new Thread(new Runnable() {
 			public void run() {
-				if (DemoHelper.getInstance().isLoggedIn()) {
+				if (SuperWechatHelper.getInstance().isLoggedIn()) {
 					// auto login mode, make sure all group and conversation is loaed before enter the main screen
 					long start = System.currentTimeMillis();
 					EMClient.getInstance().chatManager().loadAllConversations();

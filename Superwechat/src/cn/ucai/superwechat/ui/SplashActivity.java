@@ -11,6 +11,7 @@ import com.hyphenate.util.EasyUtils;
 
 import cn.ucai.superwechat.SuperWechatHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.video.util.MFGT;
 
 /**
  * 开屏页
@@ -41,6 +42,7 @@ public class SplashActivity extends BaseActivity {
 //		开启的子线程，但不能修改view，不然报错，也就是不能修改更新UI线程
 		new Thread(new Runnable() {
 			public void run() {
+//				判断是否登录过，登陆过，则直接进入，没登陆过，则进入欢迎界面
 				if (SuperWechatHelper.getInstance().isLoggedIn()) {
 					// auto login mode, make sure all group and conversation is loaed before enter the main screen
 					long start = System.currentTimeMillis();
@@ -62,6 +64,7 @@ public class SplashActivity extends BaseActivity {
 					} else {
 						//enter main screen
 						startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//						MFGT.startActivity(SplashActivity.this, LoginAndRegisterActivity.class);
 					}
 					finish();
 				}else {
@@ -69,7 +72,8 @@ public class SplashActivity extends BaseActivity {
 						Thread.sleep(sleepTime);
 					} catch (InterruptedException e) {
 					}
-					startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+					MFGT.startActivity(SplashActivity.this, LoginAndRegisterActivity.class);
+//					startActivity(new Intent(SplashActivity.this, LoginActivity.class));
 					finish();
 				}
 			}

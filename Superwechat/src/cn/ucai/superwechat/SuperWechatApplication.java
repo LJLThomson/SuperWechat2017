@@ -47,7 +47,10 @@ public class SuperWechatApplication extends Application {
 	}
 
 	public static SuperWechatApplication getInstance() {
-		return instance;
+		if (instance == null) {
+			instance = new SuperWechatApplication();
+		}
+		return instance ;
 	}
 
 	@Override

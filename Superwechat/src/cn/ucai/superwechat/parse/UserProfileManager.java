@@ -2,9 +2,11 @@ package cn.ucai.superwechat.parse;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +149,7 @@ public class UserProfileManager {
 
 	public void asyncGetCurrentUserInfo(Context context) {
 //		得到当前用户信息
-//		ParseManager.getInstance().asyncGetCurrentUserInfo后面运行，比modelUser.getUserByName要晚，会挤掉本地保存的数据
+//		ParseManager.getInstance().asyncGetCurrentUserInfo后面运行，比modelUser.getUserByName要晚，会挤掉本地保存的数据,给出一个随机昵称
 		ParseManager.getInstance().asyncGetCurrentUserInfo(new EMValueCallBack<EaseUser>() {
 
 			@Override
@@ -155,8 +157,8 @@ public class UserProfileManager {
 				L.e(TAG,"asyncGetCurrentUserInfo"+value);
 			    if(value != null){
 //					保存了用户昵称
-    				setCurrentUserNick(value.getNick());
-    				setCurrentUserAvatar(value.getAvatar());
+//    				setCurrentUserNick(value.getNick());
+//    				setCurrentUserAvatar(value.getAvatar());
 			    }
 			}
 
@@ -173,7 +175,8 @@ public class UserProfileManager {
 			public void onSuccess(Result result) {
 				L.e("UserProfileManager","result="+result);
 				if (result != null){
-
+					User user = new Gson().fromJson(result.getRetData().toString(),User.class);
+					setCurrentUserNick(user.getMUserNick());
 				}
 			}
 

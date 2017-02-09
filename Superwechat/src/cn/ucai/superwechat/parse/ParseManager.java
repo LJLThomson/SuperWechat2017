@@ -121,7 +121,7 @@ public class ParseManager {
 		});
 	}
 
-	
+//	解析当前用户信息
 	public void asyncGetCurrentUserInfo(final EMValueCallBack<EaseUser> callback){
 		final String username = EMClient.getInstance().getCurrentUser();
 		asyncGetUserInfo(username, new EMValueCallBack<EaseUser>() {

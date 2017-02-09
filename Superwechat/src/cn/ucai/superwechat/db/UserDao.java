@@ -16,6 +16,7 @@ package cn.ucai.superwechat.db;
 import android.content.Context;
 
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,15 @@ public class UserDao {
 	public static final String ROBOT_COLUMN_NAME_ID = "username";
 	public static final String ROBOT_COLUMN_NAME_NICK = "nick";
 	public static final String ROBOT_COLUMN_NAME_AVATAR = "avatar";
-	
+
+	public static final String USER_TABLE_NAME = "t_superwechat_user";
+	public static final String USER_COLUMN_NAME = "m_user_name";
+	public static final String USER_COLUMN_NICK = "m_user_nick";
+	public static final String USER_COLUMN_AVATAR = "m_user_avatar_id";
+	public static final String USER_COLUMN_AVATAR_PATH = "m_user_avatar_path";
+	public static final String USER_COLUMN_AVATAR_SUFFIX = "m_user_avatar_SUFFIX";
+	public static final String USER_COLUMN_AVATAR_TYPE = "m_user_avatar_type";
+	public static final String USER_COLUMN_AVATAR_UPDATA_TIME = "m_user_update_time";
 	
 	public UserDao(Context context) {
 	}
@@ -67,15 +76,49 @@ public class UserDao {
 	public void deleteContact(String username){
 	    SuperWechatDBManager.getInstance().deleteContact(username);
 	}
-	
+
 	/**
 	 * save a contact
 	 * @param user
 	 */
 	public void saveContact(EaseUser user){
-	    SuperWechatDBManager.getInstance().saveContact(user);
+		SuperWechatDBManager.getInstance().saveContact(user);
 	}
-	
+
+	/**
+	 * save a contact
+	 * @param user
+	 */
+	public void saveAppContact(User user){
+	    SuperWechatDBManager.getInstance().saveAppContact(user);
+	}
+
+	/**
+	 * save contact list
+	 *
+	 * @param contactList
+	 */
+	public void saveAppContactList(List<User> contactList) {
+		SuperWechatDBManager.getInstance().saveAppContactList(contactList);
+	}
+
+	/**
+	 * get contact list
+	 *
+	 * @return
+	 */
+	public Map<String, User> getAppContactList() {
+		return SuperWechatDBManager.getInstance().getAppContactList();
+	}
+
+	/**
+	 * delete a contact
+	 * @param username
+	 */
+	public void deleteAppContact(String username){
+		SuperWechatDBManager.getInstance().deleteAppContact(username);
+	}
+
 	public void setDisabledGroups(List<String> groups){
 	    SuperWechatDBManager.getInstance().setDisabledGroups(groups);
     }

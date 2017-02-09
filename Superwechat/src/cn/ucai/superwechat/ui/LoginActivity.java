@@ -28,9 +28,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 
 import butterknife.BindView;
@@ -43,15 +43,16 @@ import cn.ucai.superwechat.bean.Result;
 import cn.ucai.superwechat.db.SuperWechatDBManager;
 import cn.ucai.superwechat.db.net.IModelUser;
 import cn.ucai.superwechat.db.net.ModelUser;
+import cn.ucai.superwechat.db.net.OnCompleteListener;
 import cn.ucai.superwechat.utils.CommonUtils;
-import cn.ucai.superwechat.utils.OkHttpUtils;
-import cn.ucai.superwechat.video.util.MFGT;
+import cn.ucai.superwechat.utils.MD5;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 /**
  * Login screen
  */
 public class LoginActivity extends BaseActivity {
-    private static final String TAG = "LoginActivity";
+    private static final String TAG = LoginActivity.class.getSimpleName();
     public static final int REQUEST_CODE_SETNICK = 1;
     @BindView(R.id.username)
     EditText usernameEditText;
@@ -110,11 +111,12 @@ public class LoginActivity extends BaseActivity {
 
     /**
      * login
-     *
+     * 环信和本地，登录过程相同，只有用户名和密码，所以可以采用环信登录，这也是优化
      * @param view
      */
     @OnClick(R.id.login)
     public void loginAppServer(View view) {
+        final ProgressDialog pd = new ProgressDialog(this);
         final String currentUsername = usernameEditText.getText().toString().trim();
         final String currentPassword = passwordEditText.getText().toString().trim();
         if (TextUtils.isEmpty(currentUsername)) {
@@ -131,29 +133,30 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
             return;
         }
-        model.LoginEnter(this, currentUsername, currentPassword, new OkHttpUtils.OnCompleteListener<String>() {
+        pd.show();
+        model.LoginEnter(this, currentUsername, currentPassword, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String s) {
                 if (s !=null){
-                    Log.i("main",">>>>>>>>>"+s);
-//                    Result result = ResultUtils.getResultFromJson(s,User.class);
-                    Gson gson = new Gson();
-                    Result result = gson.fromJson(s,Result.class);
-//                Gson gson = new Gson();
-//                Result result = gson.fromJson(s,Result.class);
-                    Log.i("main",">>>>>>>>>>>>>>>>"+result);
+                    Log.i("main","s="+s);
+//                    {"retCode":0,"retMsg":true,
+// "retData":{"muserName":"fasf","muserNick":"sfadf","mavatarId":1245,"mavatarPath":"user_avatar","mavatarSuffix":null,"mavatarType":0,"mavatarLastUpdateTime":"1486559510419"}
+                 Result result = ResultUtils.getResultFromJson(s, User.class);
+                    Log.i("main","result="+result);
                     if (result !=null){
                         if (result.isRetMsg()) {
 //                    CommonUtils.showLongToast(R.string.login);
+                            pd.dismiss();
                             loginEMServer(currentUsername, currentPassword);
                         } else {
+                            pd.dismiss();
                             CommonUtils.showLongToast(R.string.Login_failed);
                         }
                     }
                 }else{
+                    pd.dismiss();
                     CommonUtils.showLongToast(R.string.Login_failed);
                 }
-
             }
 
             @Override
@@ -184,6 +187,7 @@ public class LoginActivity extends BaseActivity {
 
         // After logout，the DemoDB may still be accessed due to async callback, so the DemoDB will be re-opened again.
         // close it before login to make sure DemoDB not overlap
+//        登录成功之后，关闭数据库
         SuperWechatDBManager.getInstance().closeDB();
 
         // reset current user name before login
@@ -192,7 +196,7 @@ public class LoginActivity extends BaseActivity {
         final long start = System.currentTimeMillis();
         // call login method
         Log.d(TAG, "EMClient.getInstance().login");
-        EMClient.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
+        EMClient.getInstance().login(currentUsername, MD5.getMessageDigest(currentPassword), new EMCallBack() {
 
             @Override
             public void onSuccess() {
@@ -213,17 +217,19 @@ public class LoginActivity extends BaseActivity {
                 if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
                     pd.dismiss();
                 }
+
                 // get user's info (this should be get from App's server or 3rd party service)
 //                用于set昵称和头像,便于后面调用
-                SuperWechatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
+//                	setCurrentUserNick(value.getNick());
+//                setCurrentUserAvatar(value.getAvatar());
+                SuperWechatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo(LoginActivity.this);
+//              登录成功之后，跳转到MainActivity界面
 
                 Intent intent = new Intent(LoginActivity.this,
                         MainActivity.class);
                 startActivity(intent);
 
                 finish();
-//
-                MFGT.finish(new LoginAndRegisterActivity());
             }
 
             @Override
@@ -254,6 +260,7 @@ public class LoginActivity extends BaseActivity {
      *
      * @param view
      */
+    @OnClick(R.id.register)
     public void register(View view) {
         startActivityForResult(new Intent(this, RegisterActivity.class), 0);
     }

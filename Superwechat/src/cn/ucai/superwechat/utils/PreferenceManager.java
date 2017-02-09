@@ -79,6 +79,8 @@ public class PreferenceManager {
 	 */
 	public synchronized static PreferenceManager getInstance() {
 		if (mPreferencemManager == null) {
+//			等价于init(SuperWechatApplication.getInstance());
+//			紧接着会调用PreferenceManager(Context cxt)也就是三件套
 			throw new RuntimeException("please init first!");
 		}
 

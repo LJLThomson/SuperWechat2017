@@ -16,12 +16,14 @@ package cn.ucai.superwechat.ui;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.exceptions.HyphenateException;
 
 import butterknife.BindView;
@@ -30,13 +32,12 @@ import butterknife.OnClick;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWechatHelper;
 import cn.ucai.superwechat.bean.Result;
-import cn.ucai.superwechat.bean.User;
 import cn.ucai.superwechat.db.net.IModelUser;
 import cn.ucai.superwechat.db.net.ModelUser;
 import cn.ucai.superwechat.db.net.OnCompleteListener;
 import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.DisplayUtils;
-import cn.ucai.superwechat.utils.OkHttpUtils;
+import cn.ucai.superwechat.utils.MD5;
 import cn.ucai.superwechat.utils.ResultUtils;
 import cn.ucai.superwechat.video.util.MFGT;
 
@@ -104,6 +105,7 @@ public class RegisterActivity extends BaseActivity {
             public void onSuccess(String s) {
                 if (s != null) {
 //                    将结果String转化为Result
+                    Log.i("main","register_s"+s);
                     Result result = ResultUtils.getResultFromJson(s, User.class);
                     if (result.isRetMsg()) {
 //                        说明注册成功
@@ -143,7 +145,7 @@ public class RegisterActivity extends BaseActivity {
                 public void run() {
                     try {
                         // call method in SDK
-                        EMClient.getInstance().createAccount(username, pwd);
+                        EMClient.getInstance().createAccount(username, MD5.getMessageDigest(pwd));
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 if (!RegisterActivity.this.isFinishing())
@@ -189,7 +191,7 @@ public class RegisterActivity extends BaseActivity {
      * @param username
      */
     private void unRegister(String username) {
-        model.UnRegisterEnter(this, username, new OkHttpUtils.OnCompleteListener<String>() {
+        model.UnRegisterEnter(this, username, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String s) {
                 if (s != null) {

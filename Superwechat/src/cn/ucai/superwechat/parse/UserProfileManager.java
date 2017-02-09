@@ -4,15 +4,21 @@ import android.content.Context;
 
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
-import cn.ucai.superwechat.SuperWechatHelper;
-import cn.ucai.superwechat.utils.PreferenceManager;
 import com.hyphenate.easeui.domain.EaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserProfileManager {
+import cn.ucai.superwechat.SuperWechatHelper;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.db.net.IModelUser;
+import cn.ucai.superwechat.db.net.ModelUser;
+import cn.ucai.superwechat.db.net.OnCompleteListener;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.PreferenceManager;
 
+public class UserProfileManager {
+	private static final String TAG = UserProfileManager.class.getSimpleName();
 	/**
 	 * application context
 	 */
@@ -139,12 +145,16 @@ public class UserProfileManager {
 		return avatarUrl;
 	}
 
-	public void asyncGetCurrentUserInfo() {
+	public void asyncGetCurrentUserInfo(Context context) {
+//		得到当前用户信息
+//		ParseManager.getInstance().asyncGetCurrentUserInfo后面运行，比modelUser.getUserByName要晚，会挤掉本地保存的数据
 		ParseManager.getInstance().asyncGetCurrentUserInfo(new EMValueCallBack<EaseUser>() {
 
 			@Override
 			public void onSuccess(EaseUser value) {
+				L.e(TAG,"asyncGetCurrentUserInfo"+value);
 			    if(value != null){
+//					保存了用户昵称
     				setCurrentUserNick(value.getNick());
     				setCurrentUserAvatar(value.getAvatar());
 			    }
@@ -155,7 +165,23 @@ public class UserProfileManager {
 
 			}
 		});
+//		EMClient.getInstance().getCurrentUser()登录之后自动保存到环信中的
+		L.e("UserProfileManager","asyncGetCurrentUserInfo,userName"+EMClient.getInstance().getCurrentUser());
+		IModelUser modelUser = new ModelUser();
+		modelUser.getUserByName(context, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<Result>() {
+			@Override
+			public void onSuccess(Result result) {
+				L.e("UserProfileManager","result="+result);
+				if (result != null){
 
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+
+			}
+		});
 	}
 	public void asyncGetUserInfo(final String username,final EMValueCallBack<EaseUser> callback){
 		ParseManager.getInstance().asyncGetUserInfo(username, callback);

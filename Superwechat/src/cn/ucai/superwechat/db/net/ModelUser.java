@@ -3,6 +3,7 @@ package cn.ucai.superwechat.db.net;
 import android.content.Context;
 
 import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.bean.Result;
 import cn.ucai.superwechat.utils.MD5;
 import cn.ucai.superwechat.utils.OkHttpUtils;
 
@@ -24,7 +25,7 @@ public class ModelUser implements IModelUser {
     }
 
     @Override
-    public void UnRegisterEnter(Context context, String userName, OkHttpUtils.OnCompleteListener<String> listener) {
+    public void UnRegisterEnter(Context context, String userName, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_UNREGISTER)
                 .addParam(I.User.USER_NAME,userName)
@@ -34,13 +35,21 @@ public class ModelUser implements IModelUser {
     }
 
     @Override
-    public void LoginEnter(Context context, String userName, String password, OkHttpUtils.OnCompleteListener<String> listener) {
+    public void LoginEnter(Context context, String userName, String password, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_LOGIN)
                 .addParam(I.User.USER_NAME,userName)
                 .addParam(I.User.PASSWORD,MD5.getMessageDigest(password))
-                .post()
                 .targetClass(String.class)
+                .execute(listener);
+    }
+
+    @Override
+    public void getUserByName(Context context, String userName, OnCompleteListener<Result> listener) {
+        OkHttpUtils<Result> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_FIND_USER)
+                .addParam(I.User.USER_NAME,userName)
+                .targetClass(Result.class)
                 .execute(listener);
     }
 }

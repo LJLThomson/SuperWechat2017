@@ -1278,6 +1278,7 @@ public class SuperWechatHelper {
         isGroupAndContactListenerRegisted = false;
         
         setContactList(null);
+        setAppContactList(null);
         setRobotList(null);
         getUserProfileManager().reset();
         SuperWechatDBManager.getInstance().closeDB();
@@ -1312,7 +1313,8 @@ public class SuperWechatHelper {
      */
     public void saveAppContact(User user){
 //        将数据保存集合中
-        getAppContactList().put(user.getMUserName(), user);
+        this.appContactList = getAppContactList();
+        appContactList.put(user.getMUserName(), user);
 //        保存在数据库
         demoModel.saveAppContact(user);
     }
@@ -1323,7 +1325,7 @@ public class SuperWechatHelper {
      * @return
      */
     public Map<String, User> getAppContactList() {
-        if (isLoggedIn() && appContactList == null) {
+        if (isLoggedIn() && (appContactList == null || appContactList.size() == 0)) {
             appContactList = demoModel.getAppContactList();
         }
 
@@ -1335,4 +1337,18 @@ public class SuperWechatHelper {
         return appContactList;
     }
 
+    /**
+     * update user list to cache and database
+     *
+     * @param contactInfoList
+     */
+    public void updateAppContactList(List<User> contactInfoList) {
+        this.appContactList = getAppContactList();
+        for (User u : contactInfoList) {
+            appContactList.put(u.getMUserName(), u);
+        }
+        ArrayList<User> mList = new ArrayList<User>();
+        mList.addAll(appContactList.values());
+        demoModel.saveAppContactList(mList);
+    }
 }

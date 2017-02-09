@@ -18,6 +18,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import cn.ucai.superwechat.SuperWechatHelper;
+import cn.ucai.superwechat.utils.L;
 
 public class DbOpenHelper extends SQLiteOpenHelper{
 
@@ -54,7 +55,8 @@ public class DbOpenHelper extends SQLiteOpenHelper{
             + UserDao.COLUMN_NAME_DISABLED_GROUPS + " TEXT, "
             + UserDao.COLUMN_NAME_DISABLED_IDS + " TEXT);";
 
-	private static final String USER_TABLE_CREATE = "create table " + UserDao.USER_TABLE_NAME +"("
+	private static final String USER_TABLE_CREATE = "create table "
+			+ UserDao.USER_TABLE_NAME +"("
 			+ UserDao.USER_COLUMN_NAME + " text primary key, "
 			+ UserDao.USER_COLUMN_NICK + " text,"
 			+ UserDao.USER_COLUMN_AVATAR + " integer,"
@@ -85,6 +87,8 @@ public class DbOpenHelper extends SQLiteOpenHelper{
 		db.execSQL(CREATE_PREF_TABLE);
 		db.execSQL(ROBOT_TABLE_CREATE);
 		//创建自己的数据库
+		String TAG = DbOpenHelper.class.getSimpleName();
+		L.e(TAG,"DbOpenHelper"+USER_TABLE_CREATE);
 		db.execSQL(USER_TABLE_CREATE);
 	}
 

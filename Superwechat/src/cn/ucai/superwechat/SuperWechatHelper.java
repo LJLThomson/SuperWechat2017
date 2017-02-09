@@ -27,26 +27,14 @@ import com.hyphenate.chat.EMMessage.Status;
 import com.hyphenate.chat.EMMessage.Type;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
-import cn.ucai.superwechat.db.SuperWechatDBManager;
-import cn.ucai.superwechat.db.InviteMessgeDao;
-import cn.ucai.superwechat.db.UserDao;
-import cn.ucai.superwechat.domain.EmojiconExampleGroupData;
-import cn.ucai.superwechat.domain.InviteMessage;
-import cn.ucai.superwechat.domain.RobotUser;
-import cn.ucai.superwechat.parse.UserProfileManager;
-import cn.ucai.superwechat.receiver.CallReceiver;
-import cn.ucai.superwechat.ui.ChatActivity;
-import cn.ucai.superwechat.ui.MainActivity;
-import cn.ucai.superwechat.ui.VideoCallActivity;
-import cn.ucai.superwechat.ui.VoiceCallActivity;
-import cn.ucai.superwechat.utils.PreferenceManager;
 import com.hyphenate.easeui.controller.EaseUI;
+import com.hyphenate.easeui.controller.EaseUI.EaseEmojiconInfoProvider;
 import com.hyphenate.easeui.controller.EaseUI.EaseSettingsProvider;
 import com.hyphenate.easeui.controller.EaseUI.EaseUserProfileProvider;
-import com.hyphenate.easeui.controller.EaseUI.EaseEmojiconInfoProvider;
 import com.hyphenate.easeui.domain.EaseEmojicon;
 import com.hyphenate.easeui.domain.EaseEmojiconGroupEntity;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseNotifier;
 import com.hyphenate.easeui.model.EaseNotifier.EaseNotificationInfoProvider;
@@ -60,6 +48,20 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import cn.ucai.superwechat.db.InviteMessgeDao;
+import cn.ucai.superwechat.db.SuperWechatDBManager;
+import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.domain.EmojiconExampleGroupData;
+import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.domain.RobotUser;
+import cn.ucai.superwechat.parse.UserProfileManager;
+import cn.ucai.superwechat.receiver.CallReceiver;
+import cn.ucai.superwechat.ui.ChatActivity;
+import cn.ucai.superwechat.ui.MainActivity;
+import cn.ucai.superwechat.ui.VideoCallActivity;
+import cn.ucai.superwechat.ui.VoiceCallActivity;
+import cn.ucai.superwechat.utils.PreferenceManager;
 
 public class SuperWechatHelper {
     /**
@@ -83,6 +85,8 @@ public class SuperWechatHelper {
     protected EMMessageListener messageListener = null;
 
 	private Map<String, EaseUser> contactList;
+
+    private Map<String, User> appContactList;
 
 	private Map<String, RobotUser> robotList;
 
@@ -1285,6 +1289,50 @@ public class SuperWechatHelper {
 
     public void popActivity(Activity activity) {
         easeUI.popActivity(activity);
+    }
+
+    /**
+     * update contact list
+     *
+     * @param aContactList
+     */
+    public void setAppContactList(Map<String, User> aContactList) {
+        if(aContactList == null){
+            if (appContactList != null) {
+                appContactList.clear();
+            }
+            return;
+        }
+
+        appContactList = aContactList;
+    }
+
+    /**
+     * save single contact
+     */
+    public void saveAppContact(User user){
+//        将数据保存集合中
+        getAppContactList().put(user.getMUserName(), user);
+//        保存在数据库
+        demoModel.saveAppContact(user);
+    }
+
+    /**
+     * get contact list
+     *
+     * @return
+     */
+    public Map<String, User> getAppContactList() {
+        if (isLoggedIn() && appContactList == null) {
+            appContactList = demoModel.getAppContactList();
+        }
+
+        // return a empty non-null object to avoid app crash
+        if(appContactList == null){
+            return new Hashtable<String, User>();
+        }
+
+        return appContactList;
     }
 
 }

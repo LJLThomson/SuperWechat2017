@@ -26,6 +26,7 @@ public class SuperWechatDBManager {
     private DbOpenHelper dbHelper;
 
     private SuperWechatDBManager() {
+//        创建数据库
         dbHelper = DbOpenHelper.getInstance(SuperWechatApplication.getInstance().getApplicationContext());
     }
 
@@ -475,7 +476,6 @@ public class SuperWechatDBManager {
     synchronized public void saveAppContact(User user) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(UserDao.COLUMN_NAME_ID, user.getMUserName());
         values.put(UserDao.USER_COLUMN_NAME, user.getMUserName());
         if (user.getMUserNick() != null)
             values.put(UserDao.USER_COLUMN_NICK, user.getMUserNick());

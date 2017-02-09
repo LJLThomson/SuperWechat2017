@@ -224,7 +224,6 @@ public class LoginActivity extends BaseActivity {
 //                setCurrentUserAvatar(value.getAvatar());
                 SuperWechatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo(LoginActivity.this);
 //              登录成功之后，跳转到MainActivity界面
-
                 Intent intent = new Intent(LoginActivity.this,
                         MainActivity.class);
                 startActivity(intent);

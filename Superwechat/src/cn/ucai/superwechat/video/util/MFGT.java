@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
+import cn.ucai.superwechat.ui.SettingActivity;
 
 
 /**
@@ -34,5 +35,9 @@ public class MFGT {
 
     public static void gotoRegisterActivity(FragmentActivity loginAndRegisterActivity) {
         startActivity(loginAndRegisterActivity, RegisterActivity.class);
+    }
+
+    public static void gotoSettingActivity(FragmentActivity activity) {
+        startActivity(activity, SettingActivity.class);
     }
 }

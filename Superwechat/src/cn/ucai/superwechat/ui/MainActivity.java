@@ -134,8 +134,9 @@ public class MainActivity extends BaseActivity  implements DMTabHost.OnCheckedCh
     private void initFragment() {
         conversationListFragment = new ConversationListFragment();
         contactListFragment = new ContactListFragment();
-        SettingsFragment settingFragment = new SettingsFragment();
-        fragments = new Fragment[]{conversationListFragment, contactListFragment, new DicoverFragment(),settingFragment};
+//        SettingsFragment settingFragment = new SettingsFragment();
+        ProfileFragment profileFragment = new ProfileFragment();
+        fragments = new Fragment[]{conversationListFragment, contactListFragment, new DicoverFragment(),profileFragment};
 
 //		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, conversationListFragment)
 //				.add(R.id.fragment_container, contactListFragment).hide(contactListFragment).show(conversationListFragment)
@@ -145,7 +146,7 @@ public class MainActivity extends BaseActivity  implements DMTabHost.OnCheckedCh
         adapter.addFragment(conversationListFragment, "微信");
         adapter.addFragment(contactListFragment, "通讯录");
         adapter.addFragment(new DicoverFragment(), "发现");
-        adapter.addFragment(settingFragment, "我");
+        adapter.addFragment(profileFragment, "我");
         mLayoutViewpage.setAdapter(adapter);
 //        fragment首页
         mLayoutTabhost.setChecked(0);

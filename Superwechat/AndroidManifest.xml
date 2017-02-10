@@ -348,7 +348,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
-
+        <!--个人设置-->
+        <activity
+            android:name=".ui.SettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <!-- 开机自启动服务 -->
         <receiver android:name=".receiver.StartServiceReceiver">
             <intent-filter android:priority="1000">

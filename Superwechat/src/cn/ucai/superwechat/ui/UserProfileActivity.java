@@ -1,16 +1,5 @@
 package cn.ucai.superwechat.ui;
 
-import java.io.ByteArrayOutputStream;
-
-import com.bumptech.glide.Glide;
-import com.hyphenate.EMValueCallBack;
-import com.hyphenate.chat.EMClient;
-import cn.ucai.superwechat.SuperWechatHelper;
-import cn.ucai.superwechat.R;
-
-import com.hyphenate.easeui.domain.EaseUser;
-import com.hyphenate.easeui.utils.EaseUserUtils;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
@@ -30,6 +19,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.utils.EaseUserUtils;
+
+import java.io.ByteArrayOutputStream;
+
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SuperWechatHelper;
 
 public class UserProfileActivity extends BaseActivity implements OnClickListener{
 	
@@ -64,20 +64,26 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	
 	private void initListener() {
 		Intent intent = getIntent();
+//		得到的用户名为ljl938271,本来用户名应该是LJL938271，由此可见
+//		EMClient.getInstance().getCurrentUser()得到的用户名为ljl938271
 		String username = intent.getStringExtra("username");
 		boolean enableUpdate = intent.getBooleanExtra("setting", false);
 		if (enableUpdate) {
 			headPhotoUpdate.setVisibility(View.VISIBLE);
 			iconRightArrow.setVisibility(View.VISIBLE);
+//			设置监听事件
 			rlNickName.setOnClickListener(this);
+//			头像监听事件
 			headAvatar.setOnClickListener(this);
 		} else {
 			headPhotoUpdate.setVisibility(View.GONE);
 			iconRightArrow.setVisibility(View.INVISIBLE);
 		}
 		if(username != null){
+//			用户名相同
     		if (username.equals(EMClient.getInstance().getCurrentUser())) {
     			tvUsername.setText(EMClient.getInstance().getCurrentUser());
+//				从环信中取出自己要的昵称
     			EaseUserUtils.setUserNick(username, tvNickName);
                 EaseUserUtils.setUserAvatar(this, username, headAvatar);
     		} else {

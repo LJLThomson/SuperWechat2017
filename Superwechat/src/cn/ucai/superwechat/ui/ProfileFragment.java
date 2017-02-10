@@ -18,6 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.superwechat.video.util.MFGT;
 
 /**
@@ -25,7 +27,7 @@ import cn.ucai.superwechat.video.util.MFGT;
  */
 
 public class ProfileFragment extends Fragment {
-
+    private static String TAG = ProfileFragment.class.getSimpleName();
     @BindView(R.id.layout_profile_view)
     RelativeLayout layoutProfileView;
     @BindView(R.id.tv_profile_album)
@@ -55,8 +57,13 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initData() {
-//        得到用户名
-        String username = EMClient.getInstance().getCurrentUser();
+//        得到用户名,一开始登录之后，用户名和昵称都被系统自行保存了，不过用户名是以小写的形式保存的
+//        所以
+        String username1 = EMClient.getInstance().getCurrentUser();//取出来的都为小写，当保存在数据库时，会出现错误
+//        从sharepreference中得到用户名
+        String username = PreferenceManager.getInstance().getCurrentUsername();
+        L.e(TAG,">>>>>>>>>>>>>>>>>用户名"+ username);
+//        这里的nick第一是从内存中取数据，第二才是从数据库中取数据
         EaseUserUtils.setAppUserNick(username, tvProfileNickname);
         EaseUserUtils.setAppUserAvatar(getContext(), username,ivProfileAvatar );
     }

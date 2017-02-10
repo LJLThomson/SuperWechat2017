@@ -776,7 +776,7 @@ public class SuperWechatHelper {
         // You'd better cache it if you get it from your server
         User user = null;
         user = getAppContactList().get(username);
-
+        Log.e(TAG,"getAppUserInfo"+user);
         // if user is not in your contacts, set inital letter for him/her
         if(user == null){
             user = new User(username);
@@ -1332,6 +1332,7 @@ public class SuperWechatHelper {
     public void saveAppContact(User user){
 //        将数据保存集合中
         this.appContactList = getAppContactList();
+//        通过用户名得到user
         appContactList.put(user.getMUserName(), user);
 //        保存在数据库
         demoModel.saveAppContact(user);

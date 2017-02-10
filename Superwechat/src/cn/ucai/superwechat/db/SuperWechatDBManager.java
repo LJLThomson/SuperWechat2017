@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
@@ -433,7 +434,7 @@ public class SuperWechatDBManager {
                 int type = cursor.getInt(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_TYPE));
                 String lastTime = cursor.getString(cursor.getColumnIndex(UserDao.USER_COLUMN_AVATAR_UPDATA_TIME));
                 User user = new User();
-
+                Log.e("SuperWechatDBManaget","getAppContactList"+user);
                 user.setMUserName(username);
                 user.setMUserNick(nick);
                 user.setMAvatarId(avaterId);

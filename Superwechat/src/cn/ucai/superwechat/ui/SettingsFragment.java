@@ -35,13 +35,13 @@ import com.easemob.redpacketui.utils.RedPacketUtil;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
-import cn.ucai.superwechat.Constant;
-import cn.ucai.superwechat.SuperWechatHelper;
-import cn.ucai.superwechat.SuperWechatModel;
-import cn.ucai.superwechat.R;
-import cn.ucai.superwechat.utils.PreferenceManager;
 import com.hyphenate.easeui.widget.EaseSwitchButton;
 import com.hyphenate.util.EMLog;
+
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SuperWechatHelper;
+import cn.ucai.superwechat.SuperWechatModel;
+import cn.ucai.superwechat.utils.PreferenceManager;
 
 /**
  * settings screen
@@ -433,7 +433,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 					public void run() {
 						pd.dismiss();
 						// show login screen
-						((MainActivity) getActivity()).finish();
+						getActivity().finish();
 						startActivity(new Intent(getActivity(), LoginActivity.class));
 						
 					}
@@ -461,13 +461,13 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 	}
 
 	
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-    	super.onSaveInstanceState(outState);
-        if(((MainActivity)getActivity()).isConflict){
-        	outState.putBoolean("isConflict", true);
-        }else if(((MainActivity)getActivity()).getCurrentAccountRemoved()){
-        	outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
-        }
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//    	super.onSaveInstanceState(outState);
+//        if(((MainActivity)getActivity()).isConflict){
+//        	outState.putBoolean("isConflict", true);
+//        }else if(((MainActivity)getActivity()).getCurrentAccountRemoved()){
+//        	outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
+//        }
+//    }
 }

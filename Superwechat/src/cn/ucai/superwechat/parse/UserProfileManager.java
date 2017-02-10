@@ -169,6 +169,7 @@ public class UserProfileManager {
         });
 //		EMClient.getInstance().getCurrentUser()登录之后自动保存到环信中的
         L.e("UserProfileManager", "asyncGetCurrentUserInfo,userName" + EMClient.getInstance().getCurrentUser());
+
         IModelUser modelUser = new ModelUser();
         modelUser.getUserByName(context, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<Result>() {
             @Override

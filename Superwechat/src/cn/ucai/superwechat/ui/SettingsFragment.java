@@ -42,6 +42,7 @@ import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWechatHelper;
 import cn.ucai.superwechat.SuperWechatModel;
 import cn.ucai.superwechat.utils.PreferenceManager;
+import cn.ucai.superwechat.video.util.MFGT;
 
 /**
  * settings screen
@@ -433,9 +434,9 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 					public void run() {
 						pd.dismiss();
 						// show login screen
-						getActivity().finish();
-						startActivity(new Intent(getActivity(), LoginActivity.class));
-						
+//						getActivity().finish();
+//						startActivity(new Intent(getActivity(), LoginActivity.class));
+						MFGT.gotoNewLoginActivity(getActivity());
 					}
 				});
 			}

@@ -45,6 +45,7 @@ import cn.ucai.superwechat.db.net.IModelUser;
 import cn.ucai.superwechat.db.net.ModelUser;
 import cn.ucai.superwechat.db.net.OnCompleteListener;
 import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.DisplayUtils;
 import cn.ucai.superwechat.utils.MD5;
 import cn.ucai.superwechat.utils.ResultUtils;
 
@@ -84,6 +85,7 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.em_activity_login);
         ButterKnife.bind(this);
         model = new ModelUser();
+        DisplayUtils.initBackWithTitle(this,"登录");
         // if user changed, clear the password
 //        addTextChangedListener(new TextWatcher)
 //        用于检测，及时提醒用户输入合不合法，或者，是否已经被注册等等功能

@@ -40,4 +40,11 @@ public class MFGT {
     public static void gotoSettingActivity(FragmentActivity activity) {
         startActivity(activity, SettingActivity.class);
     }
+
+    public static void gotoNewLoginActivity(FragmentActivity activity) {
+        Intent intent = new Intent(activity,LoginActivity.class);
+//        进入登录界面，并清掉该栈task中所有的activity,进入登录界面，finish只是关闭当前界面，一次back会回到倒数第二次页面
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(activity,intent);
+    }
 }

@@ -101,7 +101,7 @@ public class EaseUserUtils {
             User user = getAppUserInfo(username);
             Log.e("easeUser",">>>>>>>"+user);
             if(user != null && user.getMUserNick() != null){
-                textView.setText(user.getMUserNick());
+                textView.setText("昵称："+user.getMUserNick());
             }else{
                 textView.setText(username);
             }

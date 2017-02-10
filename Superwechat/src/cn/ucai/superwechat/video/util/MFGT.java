@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.ui.LoginActivity;
+import cn.ucai.superwechat.ui.PersonalInformationAcitivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
 import cn.ucai.superwechat.ui.SettingActivity;
 
@@ -46,5 +47,9 @@ public class MFGT {
 //        进入登录界面，并清掉该栈task中所有的activity,进入登录界面，finish只是关闭当前界面，一次back会回到倒数第二次页面
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(activity,intent);
+    }
+
+    public static void gotoPerInformationActivity(FragmentActivity activity) {
+        startActivity(activity,new Intent(activity, PersonalInformationAcitivity.class));
     }
 }

@@ -50,8 +50,8 @@
         android:name=".SuperWechatApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:theme="@style/AppTheme"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
         <activity
             android:name=".ui.MainActivity"
             android:launchMode="singleTask"
@@ -351,6 +351,12 @@
         <!--个人设置-->
         <activity
             android:name=".ui.SettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <!--个人信息-->
+        <activity
+            android:name=".ui.PersonalInformationAcitivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan|stateHidden"/>

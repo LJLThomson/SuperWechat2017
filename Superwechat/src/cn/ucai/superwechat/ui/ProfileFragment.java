@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.easemob.redpacketui.utils.RedPacketUtil;
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import butterknife.BindView;
@@ -59,7 +58,7 @@ public class ProfileFragment extends Fragment {
     private void initData() {
 //        得到用户名,一开始登录之后，用户名和昵称都被系统自行保存了，不过用户名是以小写的形式保存的
 //        所以
-        String username1 = EMClient.getInstance().getCurrentUser();//取出来的都为小写，当保存在数据库时，会出现错误
+//        String username1 = EMClient.getInstance().getCurrentUser();//取出来的都为小写，当保存在数据库时，会出现错误
 //        从sharepreference中得到用户名
         String username = PreferenceManager.getInstance().getCurrentUsername();
         L.e(TAG,">>>>>>>>>>>>>>>>>用户名"+ username);
@@ -72,7 +71,8 @@ public class ProfileFragment extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_profile_view:
-//                进入个人设置页面
+//                进入个人信息界面
+                MFGT.gotoPerInformationActivity(getActivity());
                 break;
             case R.id.tv_profile_album:
 //                相册

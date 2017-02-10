@@ -12,6 +12,7 @@ import cn.ucai.superwechat.R;
 
 
 public class DMTabTextView extends RelativeLayout {
+//    用于处理控件文字和图片的
     private TextView tab_button;
     private View view_line;
     private boolean isChecked = false;

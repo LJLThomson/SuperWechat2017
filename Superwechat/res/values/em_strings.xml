@@ -348,4 +348,6 @@
     <string name="push_saving_settings">Saving settings</string>
     <string name="push_save_failed">Save settings failed</string>
     <string name="loading_more">loading more…</string>
+    <string name="User_nick_cannot_be_empty">User nick cannot be empty</string>
+    <string name="UnRegistered_successfully">UnRegistered successfully</string>
 </resources>

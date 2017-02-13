@@ -40,7 +40,6 @@ public class EaseUserUtils {
     public static User getAppUserInfo(String username){
         if(userProvider != null)
             return userProvider.getAppUser(username);
-
         return null;
     }
     /**
@@ -101,7 +100,7 @@ public class EaseUserUtils {
             User user = getAppUserInfo(username);
             Log.e("easeUser",">>>>>>>"+user);
             if(user != null && user.getMUserNick() != null){
-                textView.setText("昵称："+user.getMUserNick());
+                textView.setText(user.getMUserNick());
             }else{
                 textView.setText(username);
             }

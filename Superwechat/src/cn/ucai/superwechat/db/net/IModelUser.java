@@ -2,6 +2,8 @@ package cn.ucai.superwechat.db.net;
 
 import android.content.Context;
 
+import java.io.File;
+
 import cn.ucai.superwechat.bean.Result;
 
 /**
@@ -17,5 +19,7 @@ public interface IModelUser {
 
     void getUserByName(Context context, String userName,OnCompleteListener<Result> listener);
 
-    void updateNickName(Context context, String userName,String nickName,OnCompleteListener<Result> listener);
+    void updateNickName(Context context, String userName, String nickName, OnCompleteListener<Result> listener);
+
+    void updateAvator(Context context, String user_name_or_hxid,  File file, OnCompleteListener<Result> listener);
 }

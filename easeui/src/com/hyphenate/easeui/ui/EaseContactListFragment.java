@@ -89,7 +89,7 @@ public class EaseContactListFragment extends EaseBaseFragment {
         
         contactListLayout = (EaseContactList) getView().findViewById(R.id.contact_list);        
         listView = contactListLayout.getListView();
-        
+
         //search
         query = (EditText) getView().findViewById(R.id.query);
         clearSearch = (ImageButton) getView().findViewById(R.id.search_clear);
@@ -122,7 +122,7 @@ public class EaseContactListFragment extends EaseBaseFragment {
                     clearSearch.setVisibility(View.VISIBLE);
                 } else {
                     clearSearch.setVisibility(View.INVISIBLE);
-                    
+
                 }
             }
 

@@ -33,7 +33,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.redpacketsdk.constant.RPConstant;
@@ -55,6 +57,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWechatHelper;
@@ -64,17 +67,24 @@ import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
 import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
 import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.video.util.MFGT;
 import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
+import cn.ucai.superwechat.widget.TitleMenu.ActionItem;
+import cn.ucai.superwechat.widget.TitleMenu.TitlePopup;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseActivity  implements DMTabHost.OnCheckedChangeListener,ViewPager.OnPageChangeListener{
+public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedChangeListener, ViewPager.OnPageChangeListener {
 
     protected static final String TAG = "MainActivity";
     @BindView(R.id.layout_viewpage)
     MFViewPager mLayoutViewpage;
     @BindView(R.id.layout_tabhost)
     DMTabHost mLayoutTabhost;
+    @BindView(R.id.tv_common_Title)
+    TextView tvCommonTitle;
+    @BindView(R.id.mtxtleft)
+    TextView mtxtleft;
 
 //    // textview for unread message count
 //    private TextView unreadLabel;
@@ -92,6 +102,7 @@ public class MainActivity extends BaseActivity  implements DMTabHost.OnCheckedCh
     private boolean isCurrentAccountRemoved = false;
 
     MainTabAdpter adapter;
+    TitlePopup mTitlePopup;
 
     /**
      * check if current user account was remove
@@ -136,7 +147,7 @@ public class MainActivity extends BaseActivity  implements DMTabHost.OnCheckedCh
         contactListFragment = new ContactListFragment();
 //        SettingsFragment settingFragment = new SettingsFragment();
         ProfileFragment profileFragment = new ProfileFragment();
-        fragments = new Fragment[]{conversationListFragment, contactListFragment, new DicoverFragment(),profileFragment};
+        fragments = new Fragment[]{conversationListFragment, contactListFragment, new DicoverFragment(), profileFragment};
 
 //		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, conversationListFragment)
 //				.add(R.id.fragment_container, contactListFragment).hide(contactListFragment).show(conversationListFragment)
@@ -154,6 +165,18 @@ public class MainActivity extends BaseActivity  implements DMTabHost.OnCheckedCh
         mLayoutViewpage.setOnPageChangeListener(this);//ViewPager图片滑动监听器
         mLayoutTabhost.setOnCheckedChangeListener(this);//FragmentAdapter监听器,状态发生变化时
     }
+
+    TitlePopup.OnItemOnClickListener listener = new TitlePopup.OnItemOnClickListener() {
+        @Override
+        public void onItemClick(ActionItem item, int position) {
+            L.e(TAG, "item" + item + "position:" + position);
+            switch (position) {
+                case 1:
+                    MFGT.gotoAddContact(MainActivity.this);
+                    break;
+            }
+        }
+    };
 
     private void initUment() {
         //umeng api
@@ -217,6 +240,14 @@ public class MainActivity extends BaseActivity  implements DMTabHost.OnCheckedCh
 //        mTabs[2] = (Button) findViewById(R.id.btn_setting);
 //        // select first tab
 //        mTabs[0].setSelected(true);
+        mtxtleft.setVisibility(View.VISIBLE);
+        tvCommonTitle.setVisibility(View.VISIBLE);
+        mTitlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_groupchat, R.drawable.icon_menu_group));
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_addfriend, R.drawable.icon_menu_addfriend));
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_qrcode, R.drawable.icon_menu_sao));
+        mTitlePopup.addAction(new ActionItem(this, R.string.menu_money, R.drawable.icon_menu_money));
+        mTitlePopup.setItemOnClickListener(listener);
     }
 
     /**
@@ -349,7 +380,7 @@ public class MainActivity extends BaseActivity  implements DMTabHost.OnCheckedCh
         broadcastManager.registerReceiver(broadcastReceiver, intentFilter);
     }
 
-//    DMTabHost 和ViewPager
+    //    DMTabHost 和ViewPager
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 //        当页面在滑动的时候会调用此方法，在滑动被停止之前，此方法回一直得到调用。
@@ -362,9 +393,9 @@ public class MainActivity extends BaseActivity  implements DMTabHost.OnCheckedCh
     @Override
     public void onPageSelected(int position) {
 //        当页面跳转完毕之后调用
-        L.e(TAG,"onPageSelected"+position);
+        L.e(TAG, "onPageSelected" + position);
 //        mLayoutViewpage.setCurrentItem(position);//快速翻页
-        mLayoutViewpage.setCurrentItem(position,true);//有滚动的效果
+        mLayoutViewpage.setCurrentItem(position, true);//有滚动的效果
 //        图片滑动之后，button控件也要随之滑动
         mLayoutTabhost.setChecked(position);
     }
@@ -378,8 +409,13 @@ public class MainActivity extends BaseActivity  implements DMTabHost.OnCheckedCh
     @Override
     public void onCheckedChange(int checkedPosition, boolean byUser) {
 //    当FragmentAdapter滑动位置发生改变时，ViewPager也要发生响应改变(也就是那些控件)
-        L.e(TAG,"onCheckedChange"+checkedPosition);
+        L.e(TAG, "onCheckedChange" + checkedPosition);
         mLayoutViewpage.setCurrentItem(checkedPosition);
+    }
+
+    @OnClick(R.id.tv_common_Title)
+    public void onClick() {
+        mTitlePopup.show(findViewById(R.id.layout_title));
     }
 
     public class MyContactListener implements EMContactListener {

@@ -13,7 +13,10 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@style/AnimFade2</item>
     </style>
-
+    <style name="style_popup_window">
+        <item name="android:windowEnterAnimation">@anim/pop_enter</item>
+        <item name="android:windowExitAnimation">@anim/pop_exit</item>
+    </style>
     <style name="AppTheme.TransparentActivity">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>

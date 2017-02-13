@@ -775,6 +775,7 @@ public class SuperWechatHelper {
         // To get instance of EaseUser, here we get it from the user list in memory
         // You'd better cache it if you get it from your server
         User user = null;
+//        从集合中取出user
         user = getAppContactList().get(username);
         Log.e(TAG,"getAppUserInfo"+user);
         // if user is not in your contacts, set inital letter for him/her
@@ -1332,7 +1333,7 @@ public class SuperWechatHelper {
     public void saveAppContact(User user){
 //        将数据保存集合中
         this.appContactList = getAppContactList();
-//        通过用户名得到user
+//        用户名为key保存到集合中
         appContactList.put(user.getMUserName(), user);
 //        保存在数据库
         demoModel.saveAppContact(user);

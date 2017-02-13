@@ -1,6 +1,9 @@
 package cn.ucai.superwechat.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +17,7 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.utils.DisplayUtils;
 import cn.ucai.superwechat.utils.L;
@@ -55,7 +59,7 @@ public class PersonalInformationAcitivity extends BaseActivity {
     ImageView ivUserinfoAvatar;
     @BindView(R.id.layout_userinfo_name)
     LinearLayout layoutUserinfoName;
-
+    updatenickReceiver mReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +103,30 @@ public class PersonalInformationAcitivity extends BaseActivity {
             case R.id.layout_userinfo_sign:
 //                个性签名
                 break;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mReceiver = new updatenickReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(I.REQUEST_UPDATE_USER_NICK);
+        registerReceiver(mReceiver, filter);//注册
+    }
+    class updatenickReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String nickname = intent.getStringExtra("nick");
+            tvUserinfoNick.setText(nickname);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mReceiver != null) {
+          unregisterReceiver(mReceiver);//注销接收器
         }
     }
 }

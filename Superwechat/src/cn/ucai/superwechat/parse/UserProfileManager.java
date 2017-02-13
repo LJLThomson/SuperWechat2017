@@ -179,12 +179,12 @@ public class UserProfileManager {
                     User user = new Gson().fromJson(result.getRetData().toString(), User.class);
                     if (user != null) {
                         //	保存到SharePreference，也就是内存中
-                        setCurrentUserNick(user.getMUserNick());
+                       setCurrentUserNick(user.getMUserNick());
 //                        user.getAvatar得到头像
 //                        String path = "http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="+getMUserName()+"&avatarType=user_avatar&m_avatar_suffix="+getMAvatarSuffix()+"&updatetime="+getMAvatarLastUpdateTime();
                         // name_or_hxid avatarType m_avatar_suffix
                         setCurrentUserAvatar(user.getAvatar());
-                        //保存到本地(自行创建)数据库 ,同时保存到集合中去了
+                        //保存到本地(自行创建)数据库 ,同时保存到集合中去了appContactList中，user，所以以后昵称，可以从user中得到
                         SuperWechatHelper.getInstance().saveAppContact(user);
                     }
                 }
@@ -202,6 +202,8 @@ public class UserProfileManager {
     }
 
     private void setCurrentUserNick(String nickname) {
+//      通过内存查找，如果有用户昵称，则用用户昵称，否则用用户名
+//        下面这句没什么用，原因是后面每次写getCurrentUserInfo(),覆盖了此信息
         getCurrentUserInfo().setNick(nickname);
         PreferenceManager.getInstance().setCurrentUserNick(nickname);
     }

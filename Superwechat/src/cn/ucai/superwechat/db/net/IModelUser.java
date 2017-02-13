@@ -16,4 +16,6 @@ public interface IModelUser {
     void LoginEnter(Context context, String userName, String password, OnCompleteListener<String> listener);
 
     void getUserByName(Context context, String userName,OnCompleteListener<Result> listener);
+
+    void updateNickName(Context context, String userName,String nickName,OnCompleteListener<Result> listener);
 }

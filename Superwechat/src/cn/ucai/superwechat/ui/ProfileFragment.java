@@ -1,5 +1,9 @@
 package cn.ucai.superwechat.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +20,7 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.PreferenceManager;
@@ -45,7 +50,7 @@ public class ProfileFragment extends Fragment {
     TextView tvProfileUsername;
     @BindView(R.id.iv_profile_avatar)
     ImageView ivProfileAvatar;
-
+    PersonalReceive mReceiver;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,7 +67,7 @@ public class ProfileFragment extends Fragment {
 //        从sharepreference中得到用户名
         String username = PreferenceManager.getInstance().getCurrentUsername();
         L.e(TAG,">>>>>>>>>>>>>>>>>用户名"+ username);
-//        这里的nick第一是从内存中取数据，第二才是从数据库中取数据
+//        这里的nick第一是从内存中取数据，第二才是从数据库中取数据，设置昵称，通过查看profile仿写
         EaseUserUtils.setAppUserNick(username, tvProfileNickname);
         EaseUserUtils.setAppUserAvatar(getContext(), username,ivProfileAvatar );
     }
@@ -91,6 +96,32 @@ public class ProfileFragment extends Fragment {
 //                个人设置
                 MFGT.gotoSettingActivity(getActivity());
                 break;
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mReceiver = new PersonalReceive();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(I.REQUEST_UPDATE_USER_NICK);
+        getActivity().registerReceiver(mReceiver, filter);//注册
+    }
+
+    class PersonalReceive extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String nickname = intent.getStringExtra("nick");
+            tvProfileNickname.setText(nickname);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mReceiver != null) {
+            getActivity().unregisterReceiver(mReceiver);//注销接收器
         }
     }
 }

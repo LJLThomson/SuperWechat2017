@@ -491,6 +491,7 @@ public class SuperWechatDBManager {
         if (user.getMAvatarLastUpdateTime() != null)
             values.put(UserDao.USER_COLUMN_AVATAR_UPDATA_TIME, user.getMAvatarLastUpdateTime());
         if (db.isOpen()) {
+//            用户名相同，则进行覆盖操作，与insert不同之处
             db.replace(UserDao.USER_TABLE_NAME, null, values);
         }
     }

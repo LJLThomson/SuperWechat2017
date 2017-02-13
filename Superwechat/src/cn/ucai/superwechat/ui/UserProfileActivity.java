@@ -21,19 +21,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import java.io.ByteArrayOutputStream;
 
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWechatHelper;
+import cn.ucai.superwechat.bean.Result;
+import cn.ucai.superwechat.db.net.IModelUser;
+import cn.ucai.superwechat.db.net.ModelUser;
+import cn.ucai.superwechat.db.net.OnCompleteListener;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.PreferenceManager;
 
 public class UserProfileActivity extends BaseActivity implements OnClickListener{
-	
+	private static String TAG = UserProfileActivity.class.getSimpleName();
 	private static final int REQUESTCODE_PICK = 1;
 	private static final int REQUESTCODE_CUTTING = 2;
 	private ImageView headAvatar;
@@ -43,7 +52,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	private TextView tvUsername;
 	private ProgressDialog dialog;
 	private RelativeLayout rlNickName;
-	
+	IModelUser model;
 	
 	
 	@Override
@@ -61,6 +70,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 		tvNickName = (TextView) findViewById(R.id.user_nickname);
 		rlNickName = (RelativeLayout) findViewById(R.id.rl_nickname);
 		iconRightArrow = (ImageView) findViewById(R.id.ic_right_arrow);
+		model = new ModelUser();
 	}
 	
 	private void initListener() {
@@ -104,30 +114,99 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.user_head_avatar:
+//			更新头像
 			uploadHeadPhoto();
 			break;
+//		更新昵称
 		case R.id.rl_nickname:
 			final EditText editText = new EditText(this);
-			new AlertDialog.Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
-					.setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							String nickString = editText.getText().toString();
-							if (TextUtils.isEmpty(nickString)) {
-								Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
-								return;
-							}
-							updateRemoteNick(nickString);
-						}
-					}).setNegativeButton(R.string.dl_cancel, null).show();
+////			自定义对话框对话框形式更新昵称，setView(View);在环信中更新
+//			new AlertDialog.Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info)
+//					.setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
+//
+//						@Override
+//						public void onClick(DialogInterface dialog, int which) {
+//							String nickString = editText.getText().toString();
+//							if (TextUtils.isEmpty(nickString)) {
+//								Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
+//								return;
+//							}
+////							更新昵称
+//							updateRemoteNick(nickString);
+//						}
+//					}).setNegativeButton(R.string.dl_cancel, null).show();
+//			break;
+//
+//			自定义的方法来更新昵称
+			final String username = SuperWechatHelper.getInstance().getCurrentUsernName();
+			L.e(TAG,"username>>>"+username);
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.setting_nickname)
+					.setIcon(android.R.drawable.ic_dialog_info)
+					.setView(editText)
+					.setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener(){
+								@Override
+								public void onClick(DialogInterface dialogInterface, int i) {
+									String nickString = editText.getText().toString();
+									L.e(TAG,"AlertDialog>>>>"+nickString);
+									if (TextUtils.isEmpty(nickString)) {
+										Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
+										return;
+									}
+									updateNIck(username,nickString);
+								}
+							})
+					.setNegativeButton(R.string.dl_cancel, null).show();
 			break;
+
 		default:
 			break;
 		}
 
 	}
-	
+
+	private void updateNIck(String userName,String nickName){
+//		final ProgressDialog dialog = new ProgressDialog(this);
+//		dialog.show();
+		model.updateNickName(this, userName, nickName, new OnCompleteListener<Result>() {
+			@Override
+			public void onSuccess(Result result) {
+				L.e(TAG,"updateNIck>>>"+result.toString());
+				if (result != null){
+					L.e(TAG,"updateNIck>>>"+result.getRetData().toString());
+					if (result.isRetMsg()&&result.getRetData()!=null){
+						User user = new Gson().fromJson(result.getRetData().toString(), User.class);
+//						昵称要保存到内存，通过内存可以调用
+						PreferenceManager.getInstance().setCurrentUserNick(user.getMUserNick());
+//						保存到集合和数据库（自己的数据库）中，用户名相同则进行覆盖数据库，
+						SuperWechatHelper.getInstance().saveAppContact(user);
+						tvNickName.setText(user.getMUserNick());
+//						发送广播形式改变其他页面昵称
+						Intent intent = new Intent(I.REQUEST_UPDATE_USER_NICK);
+						intent.putExtra("nick",user.getMUserNick());
+						sendBroadcast(intent);
+					}else {
+						if (result.getRetCode() == I.MSG_USER_SAME_NICK){
+//							dialog.dismiss();
+							CommonUtils.showLongToast("昵称未修改");
+						}else{
+//							dialog.dismiss();
+							CommonUtils.showLongToast(R.string.toast_updatenick_fail);
+						}
+					}
+				}else{
+//					dialog.dismiss();
+					CommonUtils.showLongToast(R.string.toast_updatenick_fail);
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+
+			}
+		});
+	}
 	public void asyncFetchUserInfo(String username){
 		SuperWechatHelper.getInstance().getUserProfileManager().asyncGetUserInfo(username, new EMValueCallBack<EaseUser>() {
 			
@@ -186,9 +265,9 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 	private void updateRemoteNick(final String nickName) {
 		dialog = ProgressDialog.show(this, getString(R.string.dl_update_nick), getString(R.string.dl_waiting));
 		new Thread(new Runnable() {
-
 			@Override
 			public void run() {
+//				从内存中取出昵称信息
 				boolean updatenick = SuperWechatHelper.getInstance().getUserProfileManager().updateCurrentUserNickName(nickName);
 				if (UserProfileActivity.this.isFinishing()) {
 					return;

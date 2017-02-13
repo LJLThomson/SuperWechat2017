@@ -86,10 +86,8 @@ public class EaseContactListFragment extends EaseBaseFragment {
     @Override
     protected void initView() {
         contentContainer = (FrameLayout) getView().findViewById(R.id.content_container);
-        
         contactListLayout = (EaseContactList) getView().findViewById(R.id.contact_list);        
         listView = contactListLayout.getListView();
-
         //search
         query = (EditText) getView().findViewById(R.id.query);
         clearSearch = (ImageButton) getView().findViewById(R.id.search_clear);
@@ -106,7 +104,6 @@ public class EaseContactListFragment extends EaseBaseFragment {
         
         if(listItemClickListener != null){
             listView.setOnItemClickListener(new OnItemClickListener() {
-    
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     EaseUser user = (EaseUser)listView.getItemAtPosition(position);

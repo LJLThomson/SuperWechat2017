@@ -1377,6 +1377,7 @@ public class SuperWechatHelper {
      */
     public Map<String, User> getAppContactList() {
         if (isLoggedIn() && (appContactList == null || appContactList.size() == 0)) {
+//            从集合或者数据库中取数据
             appContactList = demoModel.getAppContactList();
         }
 

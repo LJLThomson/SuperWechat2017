@@ -16,33 +16,35 @@ package cn.ucai.superwechat.ui;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.List;
 
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.adapter.NewFriendsMsgAdapter;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.InviteMessage;
 
-import java.util.List;
-
 /**
  * Application and notification
  *
  */
 public class NewFriendsMsgActivity extends BaseActivity {
-
+	TextView newFriends;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.em_activity_new_friends_msg);
-
+		newFriends = (TextView)findViewById(R.id.newFriends);
+		newFriends.setText("新的朋友");
 		ListView listView = (ListView) findViewById(R.id.list);
 		InviteMessgeDao dao = new InviteMessgeDao(this);
 		List<InviteMessage> msgs = dao.getMessagesList();
 
 		NewFriendsMsgAdapter adapter = new NewFriendsMsgAdapter(this, 1, msgs);
 		listView.setAdapter(adapter);
+//		将申请和通知页面的小红点取消（count为0时，不显示）
 		dao.saveUnreadMessageCount(0);
-		
 	}
 
 	public void back(View view) {

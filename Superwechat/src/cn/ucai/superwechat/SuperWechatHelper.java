@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.easemob.redpacketsdk.constant.RPConstant;
 import com.easemob.redpacketui.utils.RedPacketUtil;
+import com.google.gson.Gson;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMContactListener;
@@ -49,9 +50,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import cn.ucai.superwechat.bean.Result;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.SuperWechatDBManager;
 import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.db.net.IModelUser;
+import cn.ucai.superwechat.db.net.ModelUser;
+import cn.ucai.superwechat.db.net.OnCompleteListener;
 import cn.ucai.superwechat.domain.EmojiconExampleGroupData;
 import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.domain.RobotUser;
@@ -651,7 +656,7 @@ public class SuperWechatHelper {
     
     /***
      * 好友变化listener
-     * 
+     * 一个监听器，添加联系人，删除联系人，等等操作
      */
     public class MyContactListener implements EMContactListener {
 
@@ -677,12 +682,11 @@ public class SuperWechatHelper {
             localUsers.remove(username);
             userDao.deleteContact(username);
             inviteMessgeDao.deleteMessage(username);
-
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
-
+//        存储通知消息
         @Override
-        public void onContactInvited(String username, String reason) {
+        public void onContactInvited(final String username, final String reason) {
             List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
 
             for (InviteMessage inviteMessage : msgs) {
@@ -690,16 +694,45 @@ public class SuperWechatHelper {
                     inviteMessgeDao.deleteMessage(username);
                 }
             }
-            // save invitation as message
-            InviteMessage msg = new InviteMessage();
-            msg.setFrom(username);
-            msg.setTime(System.currentTimeMillis());
-            msg.setReason(reason);
-            Log.d(TAG, username + "apply to be your friend,reason: " + reason);
-            // set invitation status
-            msg.setStatus(InviteMessage.InviteMesageStatus.BEINVITEED);
-            notifyNewInviteMessage(msg);
-            broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+            IModelUser model = new ModelUser();
+
+            model.getUserByName(appContext, username, new OnCompleteListener<Result>() {
+                @Override
+                public void onSuccess(Result result) {
+                    // save invitation as message
+                    InviteMessage msg = new InviteMessage();
+                    msg.setFrom(username);
+                    msg.setTime(System.currentTimeMillis());//系统时间
+                    msg.setReason(reason);
+                    Log.d(TAG, username + "apply to be your friend,reason: " + reason);
+                    if (result != null){
+                        User user = new Gson().fromJson(result.getRetData().toString(),User.class);
+                        if (user != null){
+                            msg.setUsernick(user.getMUserNick());
+                            msg.setAvatarSuffix(user.getMAvatarSuffix());
+                            msg.setAvatarTime(user.getMAvatarLastUpdateTime());
+                        }
+                    }
+                    // set invitation status
+                    msg.setStatus(InviteMessage.InviteMesageStatus.BEINVITEED);
+                    notifyNewInviteMessage(msg);
+                    broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                }
+
+                @Override
+                public void onError(String error) {
+                    InviteMessage msg = new InviteMessage();
+                    msg.setFrom(username);
+                    msg.setTime(System.currentTimeMillis());//系统时间
+                    msg.setReason(reason);
+                    Log.d(TAG, username + "apply to be your friend,reason: " + reason);
+                    // set invitation status
+                    msg.setStatus(InviteMessage.InviteMesageStatus.BEINVITEED);
+                    notifyNewInviteMessage(msg);
+                    broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                }
+            });
+
         }
 
         @Override

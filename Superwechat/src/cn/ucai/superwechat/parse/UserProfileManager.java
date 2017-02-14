@@ -179,7 +179,7 @@ public class UserProfileManager {
                     User user = new Gson().fromJson(result.getRetData().toString(), User.class);
                     if (user != null) {
                         //	保存到SharePreference，也就是内存中
-                       setCurrentUserNick(user.getMUserNick());
+                        setCurrentUserNick(user.getMUserNick());
 //                        user.getAvatar得到头像
 //                        String path = "http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="+getMUserName()+"&avatarType=user_avatar&m_avatar_suffix="+getMAvatarSuffix()+"&updatetime="+getMAvatarLastUpdateTime();
                         // name_or_hxid avatarType m_avatar_suffix

@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="注册"
+            android:text="发送消息"
             android:textColor="@color/white"
             android:textSize="20dp"/>
     </LinearLayout>

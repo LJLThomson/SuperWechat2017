@@ -39,6 +39,7 @@
     <string name="cancel">取消</string>
     <string name="prompt">提示</string>
     <string name="search_contanier">搜索："%s"</string>
+    <string name="search_failed">搜索失败："%s"</string>
     <string name="clear_records">清空记录</string>
     <string name="clear_all_records">是否清空所有聊天记录？</string>
     <string name="location_recv">[%1$s的位置]</string>

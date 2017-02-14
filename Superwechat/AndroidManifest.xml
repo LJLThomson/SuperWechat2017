@@ -9,7 +9,8 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="22"
         tools:overrideLibrary="com.easemob.redpacketui"/>
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
     <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
     <uses-permission android:name="android.permission.VIBRATE"/>
@@ -363,6 +364,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <!-- 添加联系人 -->
+        <activity
+            android:name=".ui.ContactActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="adjustResize|stateVisible"/>
+        <activity
+            android:name=".ui.AddFriendsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="adjustResize|stateVisible"/>
         <!-- 开机自启动服务 -->
         <receiver android:name=".receiver.StartServiceReceiver">
             <intent-filter android:priority="1000">

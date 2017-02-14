@@ -1335,7 +1335,7 @@ public class SuperWechatHelper {
         this.appContactList = getAppContactList();
 //        用户名为key保存到集合中
         appContactList.put(user.getMUserName(), user);
-//        保存在数据库
+//        保存在数据库，这里用户名不同，replace就类似与insert添加，相同就替换
         demoModel.saveAppContact(user);
     }
 

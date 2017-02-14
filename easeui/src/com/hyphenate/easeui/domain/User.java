@@ -1,5 +1,11 @@
 package com.hyphenate.easeui.domain;
 
+import android.content.Context;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 
 import java.io.Serializable;
@@ -134,5 +140,17 @@ public class User implements Serializable {
 	public String getAvatar() {
 		String path = "http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="+getMUserName()+"&avatarType=user_avatar&m_avatar_suffix="+getMAvatarSuffix()+"&updatetime="+getMAvatarLastUpdateTime();
 		return path;
+	}
+//	头像设置
+	public static void setAppUserAvatarByPath(Context context, String path, ImageView imageView){
+		if (path != null){
+			try {
+				int avatarResId = Integer.parseInt(path);
+				Glide.with(context).load(avatarResId).into(imageView);
+			} catch (Exception e) {
+				//use default avatar
+				Glide.with(context).load(path).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.default_hd_avatar).into(imageView);
+			}
+		}
 	}
 }

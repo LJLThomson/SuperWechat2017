@@ -340,6 +340,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         super.back(view);
     }
 
+    //    注册广播监听器
     private void registerBroadcastReceiver() {
         broadcastManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
@@ -490,17 +491,22 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
      * update the total unread count
      */
     public void updateUnreadAddressLable() {
-//        runOnUiThread(new Runnable() {
-//            public void run() {
-//                int count = getUnreadAddressCountTotal();
-//                if (count > 0) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                int count = getUnreadAddressCountTotal();
+                if (count > 1) {
 //                    unreadAddressLable.setVisibility(View.VISIBLE);
-//                } else {
+//                    显示消息数量
+                    mLayoutTabhost.setUnreadCount(1, count);
+                } else if (count == 1) {
+//                    显示小红点
+                    mLayoutTabhost.setHasNew(1, true);//显示
+                } else {
 //                    unreadAddressLable.setVisibility(View.INVISIBLE);
-//                }
-//            }
-//        });
-
+                    mLayoutTabhost.setHasNew(1, false);//不显示
+                }
+            }
+        });
     }
 
     /**

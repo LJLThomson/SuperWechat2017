@@ -106,7 +106,6 @@ public class AddFriendsActivity extends BaseActivity {
 
         new Thread(new Runnable() {
             public void run() {
-
                 try {
                     //demo use a hardcode reason here, you need let user to input if you like
 //                    String s = getResources().getString(R.string.Add_a_friend);

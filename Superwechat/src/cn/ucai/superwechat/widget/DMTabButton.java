@@ -68,7 +68,7 @@ public class DMTabButton extends RelativeLayout
 		}
 
 	}
-
+	//	设置小红点
 	public void setHasNew(boolean hasNew)
 	{
 		if (tab_tip != null)

@@ -91,10 +91,12 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			} else{
 				holder.groupContainer.setVisibility(View.GONE);
 			}
-			EaseUserUtils.setAppUserAvatar(context,msg.getAvatar(),holder.avator);
-//			holder.reason.setText(msg.getReason());
-			holder.reason.setText(msg.getUsernick());
-			holder.name.setText(msg.getFrom());
+
+			EaseUserUtils.setAppUserAvatar(context,msg.getFrom(),holder.avator);
+			holder.reason.setText(msg.getReason());
+//			holder.reason.setText(msg.getUsernick());
+//			holder.name.setText(msg.getFrom());
+			holder.name.setText(msg.getUsernick());
 			// holder.time.setText(DateUtils.getTimestampString(new
 			// Date(msg.getTime())));
 			if (msg.getStatus() == InviteMessage.InviteMesageStatus.BEAGREED) {

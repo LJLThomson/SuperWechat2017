@@ -87,13 +87,15 @@ public class AddFriendsActivity extends BaseActivity {
             return;
         }
 //      查看，集合或者本地数据库中是否保存了该用户，保存了， 则表示该用户已添加
-        if (SuperWechatHelper.getInstance().getContactList().containsKey(username)) {
+//        getContactList环信上查看，我们需要出getAppContactList上查找
+//        if (SuperWechatHelper.getInstance().getContactList().containsKey(username)) {
             //let the user know the contact already in your contact list
 //            这段是判断环信上，互相加好友木有，加了，我们这边无法删除，将其屏蔽
 //            if (EMClient.getInstance().contactManager().getBlackListUsernames().contains(username)) {
 //                new EaseAlertDialog(this, R.string.user_already_in_contactlist).show();
 //                return;
 //            }
+        if (SuperWechatHelper.getInstance().getAppContactList().containsKey(username)) {
             new EaseAlertDialog(this, R.string.This_user_is_already_your_friend).show();
             return;
         }
@@ -109,6 +111,7 @@ public class AddFriendsActivity extends BaseActivity {
                 try {
                     //demo use a hardcode reason here, you need let user to input if you like
 //                    String s = getResources().getString(R.string.Add_a_friend);
+//                    发送消息，接下来消息会到好友变动MyContactListener中
                     EMClient.getInstance().contactManager().addContact(username, msg);
                     runOnUiThread(new Runnable() {
                         public void run() {

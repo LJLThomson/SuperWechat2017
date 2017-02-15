@@ -24,4 +24,5 @@ public interface IModelUser {
     void updateAvator(Context context, String user_name_or_hxid,  File file, OnCompleteListener<Result> listener);
 
     void addcontact(Context context, String user_name,String cname, OnCompleteListener<Result> listener);
+
 }

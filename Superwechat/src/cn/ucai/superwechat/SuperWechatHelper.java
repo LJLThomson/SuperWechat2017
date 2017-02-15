@@ -66,6 +66,7 @@ import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.VideoCallActivity;
 import cn.ucai.superwechat.ui.VoiceCallActivity;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.PreferenceManager;
 
 public class SuperWechatHelper {
@@ -662,19 +663,50 @@ public class SuperWechatHelper {
     public class MyContactListener implements EMContactListener {
 
         @Override
-        public void onContactAdded(String username) {
+        public void onContactAdded(final String username) {
             // save contact
+//            getContactList();没登录则直接创建，登录从数据库中查找uers数据创建集合，便于查看信息
+//           Map<String, EaseUser> localUsers = getContactList();
+//            等价于  Map<String, EaseUser> localUsers = contactlist;
             Map<String, EaseUser> localUsers = getContactList();
+//            创建toAddUsers，便于添加数据
             Map<String, EaseUser> toAddUsers = new HashMap<String, EaseUser>();
             EaseUser user = new EaseUser(username);
 
             if (!localUsers.containsKey(username)) {
+//                保存到uers数据库中去，
                 userDao.saveContact(user);
             }
             toAddUsers.put(username, user);
+//            将添加的集合保存到localUsers集合中(相当于保存到contactList中，传递关系localUsers=contactlist),没有保存到集合中，不过没关系，getContactList会调用的
             localUsers.putAll(toAddUsers);
 
-            broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+//            将好友关系发送到自己的服务器（存到自己数据库）上，而不是环信的服务器
+            IModelUser model = new ModelUser();
+            model.addcontact(appContext, PreferenceManager.getInstance().getCurrentUsername(), username, new OnCompleteListener<Result>() {
+                @Override
+                public void onSuccess(Result result) {
+                    L.e(TAG, "onContactAdded...result=" + result);
+                    if (result != null && result.isRetMsg()) {
+                        User user = new Gson().fromJson(result.getRetData().toString(), User.class);
+//                      判断集合数据库中有没有该好友，没有则添加，有，不添加
+                        if (user != null && (!getAppContactList().containsKey(username))) {
+//                            保存到集合中getAppContactList
+                            getAppContactList().put(username, user);
+//                            保存到自己的数据库t_super_wechat
+                            userDao.saveAppContact(user);
+//                            saveAppContact(user);上面两个等价于下面这个
+                            broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
+
         }
 
         @Override
@@ -686,7 +718,7 @@ public class SuperWechatHelper {
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
 
-        //        存储通知消息
+        //存储通知消息
         @Override
         public void onContactInvited(final String username, final String reason) {
             List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();

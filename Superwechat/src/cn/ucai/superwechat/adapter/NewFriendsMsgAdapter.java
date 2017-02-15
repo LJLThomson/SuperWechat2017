@@ -25,10 +25,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import java.util.List;
@@ -36,6 +38,7 @@ import java.util.List;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.video.util.MFGT;
 
 public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 
@@ -54,6 +57,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = View.inflate(context, R.layout.em_row_invite_msg, null);
+			holder.rel_layout = (RelativeLayout) convertView.findViewById(R.id.rel_layout);
 			holder.avator = (ImageView) convertView.findViewById(R.id.avatar);
 			holder.reason = (TextView) convertView.findViewById(R.id.message);
 			holder.name = (TextView) convertView.findViewById(R.id.name);
@@ -82,9 +86,9 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 		
 		final InviteMessage msg = getItem(position);
 		if (msg != null) {
-		    
-		    holder.agree.setVisibility(View.INVISIBLE);
-		    
+//		    	初始化将其隐藏
+		    holder.agree.setVisibility(View.VISIBLE);
+
 			if(msg.getGroupId() != null){ // show group name
 				holder.groupContainer.setVisibility(View.VISIBLE);
 				holder.groupname.setText(msg.getGroupName());
@@ -99,16 +103,19 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			holder.name.setText(msg.getUsernick());
 			// holder.time.setText(DateUtils.getTimestampString(new
 			// Date(msg.getTime())));
+//			holder.status开始状态为Refuse
 			if (msg.getStatus() == InviteMessage.InviteMesageStatus.BEAGREED) {
+//				status已经同意，控件不可见
 				holder.status.setVisibility(View.INVISIBLE);
 				holder.reason.setText(str1);
 			} else if (msg.getStatus() == InviteMessage.InviteMesageStatus.BEINVITEED || msg.getStatus() == InviteMessage.InviteMesageStatus.BEAPPLYED ||
 			        msg.getStatus() == InviteMessage.InviteMesageStatus.GROUPINVITATION) {
+//				status为被邀请状态，
 			    holder.agree.setVisibility(View.VISIBLE);
                 holder.agree.setEnabled(true);
                 holder.agree.setBackgroundResource(android.R.drawable.btn_default);
                 holder.agree.setText(str2);
-			    
+//			    	状体，status（拒绝控件），text修改
 				holder.status.setVisibility(View.VISIBLE);
 				holder.status.setEnabled(true);
 				holder.status.setBackgroundResource(android.R.drawable.btn_default);
@@ -162,6 +169,15 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
                 holder.status.setBackgroundDrawable(null);
                 holder.status.setEnabled(false);
             }
+//			点击进入详细人资料
+			final User user = new User(msg.getFrom());
+			user.setMUserNick(msg.getUsernick());
+			holder.rel_layout.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					MFGT.gotoContact_add((Activity) context,user);
+				}
+			});
 		}
 
 		return convertView;
@@ -187,6 +203,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			public void run() {
 				// call api
 				try {
+//					发送消息，superHelper_好友变动，onContactAdded才收到消息
 					if (msg.getStatus() == InviteMessage.InviteMesageStatus.BEINVITEED) {//accept be friends
 						EMClient.getInstance().contactManager().acceptInvitation(msg.getFrom());
 					} else if (msg.getStatus() == InviteMessage.InviteMesageStatus.BEAPPLYED) { //accept application to join group
@@ -194,20 +211,23 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 					} else if (msg.getStatus() == InviteMessage.InviteMesageStatus.GROUPINVITATION) {
 					    EMClient.getInstance().groupManager().acceptInvitation(msg.getGroupId(), msg.getGroupInviter());
 					}
+//					改变状态为AGREED
                     msg.setStatus(InviteMessage.InviteMesageStatus.AGREED);
                     // update database
                     ContentValues values = new ContentValues();
                     values.put(InviteMessgeDao.COLUMN_NAME_STATUS, msg.getStatus().ordinal());
+//					更新数据库
                     messgeDao.updateMessage(msg.getId(), values);
 					((Activity) context).runOnUiThread(new Runnable() {
 
 						@Override
 						public void run() {
 							pd.dismiss();
+//							holder.agree，已同意状态
 							buttonAgree.setText(str2);
 							buttonAgree.setBackgroundDrawable(null);
 							buttonAgree.setEnabled(false);
-							
+//							holder.status为不可见
 							buttonRefuse.setVisibility(View.INVISIBLE);
 						}
 					});
@@ -286,6 +306,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
     }
 
 	private static class ViewHolder {
+		RelativeLayout rel_layout;
 		ImageView avator;
 		TextView name;
 		TextView reason;

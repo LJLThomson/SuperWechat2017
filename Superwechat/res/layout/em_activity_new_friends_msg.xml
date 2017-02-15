@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#f2f2f2"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#f2f2f2"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_bar"
-        android:background="@color/top_bar_normal_bg"
-        android:gravity="center_vertical" >
+        android:background="@color/black"
+        android:gravity="center_vertical">
 
-        <include layout="@layout/ease_commom_back_btn" />
+        <include layout="@layout/ease_commom_back_btn"/>
 
         <TextView
             android:id="@+id/newFriends"
@@ -21,7 +21,17 @@
             android:layout_centerInParent="true"
             android:text="@string/Application_and_notify"
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/addFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="添加朋友"
+            android:textColor="@color/white"
+            android:textSize="18dp"/>
     </RelativeLayout>
 
     <ListView
@@ -29,10 +39,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
+        android:cacheColorHint="#00000000"
         android:descendantFocusability="afterDescendants"
         android:divider="#D4D4D4"
         android:dividerHeight="1px"
-        android:cacheColorHint="#00000000"
-        android:fastScrollEnabled="true" />
-
+        android:fastScrollEnabled="true"/>
 </LinearLayout>

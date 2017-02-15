@@ -674,7 +674,7 @@ public class SuperWechatHelper {
             EaseUser user = new EaseUser(username);
 
             if (!localUsers.containsKey(username)) {
-//                保存到uers数据库中去，
+//                好友保存到uers数据库中去，
                 userDao.saveContact(user);
             }
             toAddUsers.put(username, user);
@@ -754,6 +754,7 @@ public class SuperWechatHelper {
             Log.d(TAG, username + "accept your request");
             msg.setStatus(InviteMessage.InviteMesageStatus.BEAGREED);
             notifyNewInviteMessage(msg);
+//            保存了一个信息，再次发送了一个广播
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
 
